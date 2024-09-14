@@ -12,7 +12,7 @@ declare module "fastify" {
   }
 }
 
-function build(env: NODE_ENV = "development", fastifyOptions = {}) {
+function build(fastifyOptions = {}) {
   const app = fastify(fastifyOptions);
   app.register(AuthPlugin);
   app.register(fastifyMysql, {
