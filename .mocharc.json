@@ -1,0 +1,6 @@
+{
+  "extension": ["js"],
+  "spec": "./dist/**/*.test.js",
+  "node-option": "env-file=.env",
+  "require": "./fixtures.js"
+}

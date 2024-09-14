@@ -1,0 +1,31 @@
+{
+  "name": "mysql_api",
+  "version": "1.0.0",
+  "description": "api for mysql db",
+  "main": "dist/index.js",
+  "type": "module",
+  "scripts": {
+    "compile": "tsc",
+    "compile:watch": "tsc --watch",
+    "test": "mocha",
+    "build": "tsc -p tsconfig-build.json",
+    "dev": "node --env-file=.env dist/index.js",
+    "start": "node dist/index.js"
+  },
+  "dependencies": {
+    "@fastify/mysql": "^4.3.0",
+    "fastify": "4.28.1",
+    "fastify-plugin": "^4.5.1",
+    "mysql2": "^3.11.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.5.4",
+    "@types/chai": "^4.3.17",
+    "@types/mocha": "^10.0.7",
+    "@types/node": "^22.5.0",
+    "chai": "^5.1.1",
+    "mocha": "^10.7.3"
+  },
+  "author": "TheDongle",
+  "license": "ISC"
+}
