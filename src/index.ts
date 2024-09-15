@@ -3,7 +3,7 @@ import { build } from "./server.js";
 const server = build({ logger: process.env.NODE_ENV === "development" });
 
 server.listen(
-  { port: 3000, host: process.env.host },
+  { port: parseInt(`${process.env.PORT}`), host: process.env.HOST },
   function (err, address) {
     if (err) {
       server.log.error(err);
