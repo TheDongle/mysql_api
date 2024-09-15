@@ -153,6 +153,30 @@ describe("Insert Route", () => {
       expect(response).to.have.property("statusCode", 200);
     });
   });
+  describe("New column - diffulty", () => {
+    it("Accepts e, n, and h", async () => {
+      const response = await app.inject({
+        ...request,
+        body: {
+          insertInto: "Sudokus",
+          columns: ["Board", "Difficulty"],
+          values: ["1", "e", "2", "n", "3", "h"],
+        },
+      });
+      expect(response).to.have.property("statusCode", 200);
+    });
+    it("Doesn't accept f", async () => {
+      const response = await app.inject({
+        ...request,
+        body: {
+          insertInto: "Sudokus",
+          columns: ["Board", "Difficulty"],
+          values: ["1", "f"],
+        },
+      });
+      expect(response).to.have.property("statusCode", 400);
+    });
+  });
 
   after(async () => {
     await app.close();

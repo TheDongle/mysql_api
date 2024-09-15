@@ -1,5 +1,5 @@
 type TableName = "Sudokus";
-type ColumnName = "SudokuID" | "Board" | "TestColumn";
+type ColumnName = "SudokuID" | "Board" | "TestColumn" | "Difficulty";
 type ColumnType = number | string;
 
 const tableNameSchema = {
@@ -24,6 +24,10 @@ const columnSchema = {
       },
       TestColumn: {
         type: "number",
+      },
+      Difficulty: {
+        type: "string",
+        enum: ["e", "n", "h"],
       },
     },
   },

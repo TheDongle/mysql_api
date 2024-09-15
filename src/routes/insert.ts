@@ -2,6 +2,7 @@ import type { FastifyInstance, FastifyPluginAsync } from "fastify";
 import type { ResultSetHeader } from "mysql2/promise";
 import { prepareInsert, type InsertOptions } from "../sql/insert.js";
 import { columnNameSchema, columnValueSchema, tableNameSchema } from "../sql/schemas.js";
+import { arrayWrap } from "../utils.js";
 
 const insertBody = {
   $id: "insertBody",
@@ -48,6 +49,20 @@ const schema = {
   headers: { $ref: "auth#" },
 };
 
+function checkDifficulty(
+  columns: InsertOptions["columns"],
+  values: InsertOptions["values"],
+): boolean {
+  if (!Array.isArray(columns)) return true;
+  const ind = columns.findIndex(ele => ele === "Difficulty");
+  if (ind === -1) return true;
+  const vals = arrayWrap(values);
+  for (let i = ind; i < vals.length; i += ind + 1) {
+    if (!["e", "n", "h"].some(ele => ele === vals[i])) return false;
+  }
+  return true;
+}
+
 const InsertRoute: FastifyPluginAsync<{}> = async (fastify: FastifyInstance) => {
   fastify
     .addSchema(insertBody)
@@ -58,10 +73,14 @@ const InsertRoute: FastifyPluginAsync<{}> = async (fastify: FastifyInstance) => 
       Header: AuthHeader;
     }>("/", { schema }, async (request, reply) => {
       try {
-        const connection = await fastify.mysql.getConnection();
-        const [data] = await connection.execute<ResultSetHeader>(prepareInsert(request.body));
-        connection.release();
-        reply.code(200).send({ data });
+        if (checkDifficulty(request.body.columns, request.body.values) === true) {
+          const connection = await fastify.mysql.getConnection();
+          const [data] = await connection.execute<ResultSetHeader>(prepareInsert(request.body));
+          connection.release();
+          reply.code(200).send({ data });
+        } else {
+          reply.code(400).send({ error: "Unrecognised value provided for Difficulty column" });
+        }
       } catch (err) {
         reply.code(500).send({ error: `SQL Error ${err}` });
       }
